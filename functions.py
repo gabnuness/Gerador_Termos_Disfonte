@@ -202,15 +202,26 @@ def numero():
         return numero
 
 def valores():
-    total = float(input("Valor: "))
-    parcela = total / 8
-    return {
-        "valor" : f"{total:,.2f}",
-        "valor_parcela" : f"{parcela:,.2f}"
+    while True:
+
+        valor = float(input("Valor: "))
+        valor = str(valor)
+
+        if valor.strip() == "":
+            print("Esse campo não pode ser vazio!")
+            continue
+
+        if valor == ValueError:
+            print("Digite apenas números!")
+
+        valor = float(valor)
+        valor_parcela = valor / 8
+
+        return {
+        "valor": f"{valor:_.2f}".replace(".", ",").replace("_", "."),
+        "valor_parcela": f"{valor_parcela:_.2f}".replace(".", ",").replace("_", ".")
     }
 
 
-
-    
-
-
+valores = valores()
+print(valores)

@@ -7,26 +7,28 @@ doc = DocxTemplate("modelo.docx")  # Abrindo Modelo Word
 
 
 # funcionario = coletar_dados()
-
+nome_funcionario = nome()
     
 # dicionario dos campos que serão alterados
 referencias = {
-    "nome" : nome(),
+    "nome" : nome_funcionario,
     "cpf" : cpf(),
     "setor" : setor(),
     "cidade" : cidade(),
     "modelo" : modelo(),
     "imei" : imei(),
     "numero" : numero(),
-    **valores,
     "cargo" : cargo(),
     "dia" : datetime.now().day,
     "mes" : mes(),
     "ano" : datetime.now().year
 }
 
-doc.render(referencias) # renderizando os campos para o documento
-doc.save(f"TERMO_{nome}.docx")
+valores = valores()
+informacoes = referencias | valores
+
+doc.render(informacoes) # renderizando os campos para o documento
+doc.save(f"TERMO_{nome_funcionario}.docx")
 
 
 
