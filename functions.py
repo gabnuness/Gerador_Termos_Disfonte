@@ -1,6 +1,9 @@
 
 from datetime import datetime
 from validate_docbr import CPF
+import subprocess
+
+
 
 documento_cpf = CPF()
 
@@ -65,6 +68,7 @@ def mes():
     meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
     mes = datetime.now().month
     return meses[mes - 1]
+ 
 
 # # verifica e corrige ortografia
 def nome():
@@ -169,6 +173,12 @@ def imei():
     while True:
 
         imei = input("IMEI: ")
+
+        if 15 < len(imei) or  len(imei) < 15:
+            print("IMEI inválido")
+            continue
+
+
         if imei.strip() == "":                              # verifica se mesmo após remover os espaços no início e do fim, a variavel continua vazia
             print("Este campo não pode ser vazio!")     
             continue
@@ -223,5 +233,5 @@ def valores():
     }
 
 
-valores = valores()
-print(valores)
+# convertendo para PDF
+
