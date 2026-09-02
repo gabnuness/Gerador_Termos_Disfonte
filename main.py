@@ -1,6 +1,7 @@
 from docxtpl import DocxTemplate
 from datetime import datetime
-from functions import mes, cpf, nome, setor, cargo, cidade, modelo, imei, numero, valores
+from functions import campo_formatado, mes, cpf, nome, setor, cargo, cidade, modelo, imei, numero, valores
+
 # from functions import formatar_string, coletar_dados
 from docx2pdf import convert
 from tkinter import filedialog, Tk
@@ -10,18 +11,18 @@ from time import sleep
 
 doc = DocxTemplate("modelo.docx")  # Abrindo Modelo Word
 
-nome_funcionario = nome()    # pegando nome para definir o nome do documento
-    
+nome_funcionario = campo_formatado("Nome: ")    # pegando nome para definir o nome do documento
+
 # dicionario dos campos que serão alterados
 referencias = {
     "nome" : nome_funcionario,
     "cpf" : cpf(),
-    "setor" : setor(),
-    "cidade" : cidade(),
+    "setor" : campo_formatado("Setor: "),
+    "cidade" : campo_formatado("Cidade: "),
     "modelo" : modelo(),
     "imei" : imei(),
     "numero" : numero(),
-    "cargo" : cargo(),
+    "cargo" : campo_formatado("Cargo: "),
     "dia" : datetime.now().day,
     "mes" : mes(),
     "ano" : datetime.now().year
