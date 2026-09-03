@@ -1,6 +1,6 @@
 from docxtpl import DocxTemplate
 from datetime import datetime
-from functions import campo_formatado, mes, cpf, nome, setor, cargo, cidade, modelo, imei, numero, valores
+from functions import campo_formatado, mes, cpf, modelo, imei, numero, valores
 
 # from functions import formatar_string, coletar_dados
 from docx2pdf import convert
@@ -8,6 +8,11 @@ from tkinter import filedialog, Tk
 from pathlib import Path
 from time import sleep
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+api_key = os.getenv("API_AUTENTIQUE")
 
 doc = DocxTemplate("modelo.docx")  # Abrindo Modelo Word
 
