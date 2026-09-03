@@ -1,8 +1,8 @@
-
 from datetime import datetime
 from validate_docbr import CPF
 import subprocess
 
+# formatar strings (nome, setor, cargo e cidade)
 def campo_formatado(campo):
     while True:
 
@@ -22,8 +22,10 @@ def campo_formatado(campo):
         campo = " ".join(campo.split()).upper().strip()
         return campo       # remove espaços extras no entre os espaços
 
+# criando documento para verificação
 documento_cpf = CPF()
 
+# verifica se o CPF é valido 
 def cpf():
     while True: 
         cpf = input("CPF: ")
@@ -33,7 +35,7 @@ def cpf():
             
     return documento_cpf.mask(cpf) # retorna em outra variável o cpf formatado
 
-
+# função para formatar espaçamentos ou caracteres do IMEI, Número de Telefone ou outros... 
 def aplicar_mascara(valor, mascara):
     try:
         resultado = ""
@@ -51,12 +53,12 @@ def aplicar_mascara(valor, mascara):
     except IndexError:
         print("Erro")
 
-#  regra para pegar mês atual 
+# regra para pegar mês atual 
 def mes():
     meses = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
     mes = datetime.now().month
     return meses[mes - 1]
-         
+
 def modelo(): 
         while True:
 
@@ -129,4 +131,5 @@ def valores():
         return {
         "valor": f"{valor:_.2f}".replace(".", ",").replace("_", "."),
         "valor_parcela": f"{valor_parcela:_.2f}".replace(".", ",").replace("_", ".")
+        
     }
