@@ -102,7 +102,7 @@ def numero():
             print("Digite apenas números!")
             continue
 
-        if numero.split() == "":
+        if numero.strip() == "":
             numero = "S/N"
 
             return numero
@@ -114,22 +114,24 @@ def numero():
 
 def valores():
     while True:
+        try:
+            valor = float(input("Valor: "))
+            valor = str(valor)
 
-        valor = float(input("Valor: "))
-        valor = str(valor)
+            if valor.strip() == "":
+                print("Esse campo não pode ser vazio!")
+                continue
 
-        if valor.strip() == "":
-            print("Esse campo não pode ser vazio!")
-            continue
+            if valor == ValueError:
+                print("Digite apenas números!")
 
-        if valor == ValueError:
+            valor = float(valor)
+            valor_parcela = valor / 8
+
+            return {
+            "valor": f"{valor:_.2f}".replace(".", ",").replace("_", "."),
+            "valor_parcela": f"{valor_parcela:_.2f}".replace(".", ",").replace("_", ".")
+            }
+        except ValueError:
             print("Digite apenas números!")
 
-        valor = float(valor)
-        valor_parcela = valor / 8
-
-        return {
-        "valor": f"{valor:_.2f}".replace(".", ",").replace("_", "."),
-        "valor_parcela": f"{valor_parcela:_.2f}".replace(".", ",").replace("_", ".")
-        
-    }
