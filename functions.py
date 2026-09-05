@@ -94,23 +94,18 @@ def imei():
         return imei
 
 def numero():
-    while True:
+    possui_numero = bool(input("Possui número? (S/N): ").strip().upper())
+    if possui_numero:
+        while True:
+            if possui_numero:
+                numero = input("Número(digite apenas números): ")
 
-        numero = input("Número (digite apenas números): ")
+                if 11 < len(numero) or len(numero) > 11:
+                    print("Número inválido!")
+                    continue
 
-        if not numero.replace(" ", "").isdigit():
-            print("Digite apenas números!")
-            continue
-
-        if numero.strip() == "":
-            numero = "S/N"
-
-            return numero
-
-        numero = " ".join(numero.split()).strip()
-        numero = aplicar_mascara(numero, "(##) #####-####")
-
-        return numero
+                if not numero.replace(" ", "").isdigit():
+                    print("Digite apenas números!")
 
 def valores():
     while True:
@@ -122,9 +117,6 @@ def valores():
                 print("Esse campo não pode ser vazio!")
                 continue
 
-            if valor == ValueError:
-                print("Digite apenas números!")
-
             valor = float(valor)
             valor_parcela = valor / 8
 
@@ -132,6 +124,10 @@ def valores():
             "valor": f"{valor:_.2f}".replace(".", ",").replace("_", "."),
             "valor_parcela": f"{valor_parcela:_.2f}".replace(".", ",").replace("_", ".")
             }
+        
         except ValueError:
             print("Digite apenas números!")
+
+numero = numero()
+print(f"Número: {numero}")
 
