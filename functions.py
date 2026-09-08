@@ -1,6 +1,7 @@
 from datetime import datetime
 from validate_docbr import CPF
 import subprocess
+import phonenumbers
 
 # formatar strings (nome, setor, cargo e cidade)
 def campo_formatado(campo):
@@ -94,18 +95,24 @@ def imei():
         return imei
 
 def numero():
-    possui_numero = bool(input("Possui número? (S/N): ").strip().upper())
-    if possui_numero:
-        while True:
-            if possui_numero:
-                numero = input("Número(digite apenas números): ")
+    possui_numero = input("Possui Número(S/N)?: ").upper().strip()
+    if possui_numero == "N":
+        numero = "S/N"
+        return numero
+    
 
-                if 11 < len(numero) or len(numero) > 11:
-                    print("Número inválido!")
-                    continue
+    while True:
+        if possui_numero == "S":
+            numero = input("Digite o número de telefone: ")
+            numero = phonenumbers.parse(numero, "BR")
 
-                if not numero.replace(" ", "").isdigit():
-                    print("Digite apenas números!")
+            if phonenumbers.is_valid_number(numero):
+                numero_formatado = phonenumbers.format_number(numero, phonenumbers.PhoneNumberFormat.NATIONAL)
+                return numero_formatado
+            else:
+                print("Número Inválido")
+                continue
+
 
 def valores():
     while True:
@@ -128,6 +135,8 @@ def valores():
         except ValueError:
             print("Digite apenas números!")
 
-numero = numero()
-print(f"Número: {numero}")
 
+
+
+numero = numero()
+print(numero)
