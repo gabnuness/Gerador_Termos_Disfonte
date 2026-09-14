@@ -17,6 +17,7 @@ api_key = os.getenv("API_AUTENTIQUE")
 doc = DocxTemplate("modelo.docx")  # Abrindo Modelo Word
 
 nome_funcionario = campo_formatado("Nome: ")    # pegando nome para definir o nome do documento
+numero_telefone = numero()
 
 # dicionario dos campos que serão alterados
 referencias = {
@@ -26,7 +27,7 @@ referencias = {
     "cidade" : campo_formatado("Cidade: "),
     "modelo" : modelo(),
     "imei" : imei(),
-    "numero" : numero(),
+    "numero" : numero_telefone,
     "cargo" : campo_formatado("Cargo: "),
     "dia" : datetime.now().day,
     "mes" : mes(),

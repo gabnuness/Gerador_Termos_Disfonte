@@ -95,23 +95,33 @@ def imei():
         return imei
 
 def numero():
-    possui_numero = input("Possui Número(S/N)?: ").upper().strip()
-    if possui_numero == "N":
-        numero = "S/N"
-        return numero
-    
-
     while True:
-        if possui_numero == "S":
-            numero = input("Digite o número de telefone: ")
-            numero = phonenumbers.parse(numero, "BR")
+        possui_numero = input("Possui número de telefone (Digite 's' para SIM e 'n' para NÃO)? ").upper().strip()
 
-            if phonenumbers.is_valid_number(numero):
-                numero_formatado = phonenumbers.format_number(numero, phonenumbers.PhoneNumberFormat.NATIONAL)
-                return numero_formatado
+        if possui_numero == "N":
+            return "S/N"
+
+        elif possui_numero == "S":
+            numero = input("Digite o número de telefone (apenas números): ")
+            # utilizando o phonenumbers
+            num_telefone = phonenumbers.parse(numero, "BR") # numero interpretado com regras BR
+
+            if phonenumbers.is_valid_number(num_telefone):
+                # chamo a função que formata e dentro dela passo a forma de formatação, no caso NACIONAL
+                telefone_formatado = phonenumbers.format_number(num_telefone, phonenumbers.
+                PhoneNumberFormat.NATIONAL)
+                return telefone_formatado
+
             else:
-                print("Número Inválido")
+                print("Inválido")
                 continue
+        
+        else:
+            print("Resposta Inválida!")
+            continue
+
+    
+    
 
 
 def valores():
@@ -134,9 +144,3 @@ def valores():
         
         except ValueError:
             print("Digite apenas números!")
-
-
-
-
-numero = numero()
-print(numero)
