@@ -96,33 +96,37 @@ def imei():
 
 def numero():
     while True:
-        possui_numero = input("Possui número de telefone (Digite 's' para SIM e 'n' para NÃO)? ").upper().strip()
+        possui_numero = input("Possui Número (S/N)?: ").strip().upper() # remove espaços nas extremidades e deixa maíuscula
 
         if possui_numero == "N":
-            return "S/N"
+            return "S/N"            # sem numero
 
-        elif possui_numero == "S":
-            numero = input("Digite o número de telefone (apenas números): ")
-            # utilizando o phonenumbers
-            num_telefone = phonenumbers.parse(numero, "BR") # numero interpretado com regras BR
-
-            if phonenumbers.is_valid_number(num_telefone):
-                # chamo a função que formata e dentro dela passo a forma de formatação, no caso NACIONAL
-                telefone_formatado = phonenumbers.format_number(num_telefone, phonenumbers.
-                PhoneNumberFormat.NATIONAL)
-                return telefone_formatado
-
-            else:
-                print("Inválido")
-                continue
-        
-        else:
-            print("Resposta Inválida!")
+        if possui_numero != "S":        
+            print("Resposta inválida. Digite S para sim ou N para não.")
             continue
+        
+        while True:
+            texto_numero = input("Digite o número de telefone: ").strip()
 
-    
-    
+            if not texto_numero:
+                print("O número não pode ser vazio.")
+                continue
 
+            try:
+                numero_informado = phonenumbers.parse(texto_numero, "BR")   # aqui o parse apenas interpreta, com o codigo nacional no numero ou com o segundo parametro
+            except phonenumbers.NumberParseException:                       # verifica se nao foi passado outro valor sem ser o numero
+                print("Número inválido. Digite um telefone válido.")
+                continue
+
+            if not phonenumbers.is_valid_number(numero_informado):
+                print("Número inválido. Digite um telefone válido.")
+                continue
+
+            # formata o numero 'formata string'
+            return phonenumbers.format_number(
+                numero_informado,
+                phonenumbers.PhoneNumberFormat.NATIONAL # aqui só informa o formato, no caso o padrão nacional, sem o código do país
+            )
 
 def valores():
     while True:
