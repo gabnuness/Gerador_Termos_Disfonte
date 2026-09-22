@@ -1,7 +1,8 @@
+from decimal import Decimal, InvalidOperation
 from datetime import datetime
-from validate_docbr import CPF
-import subprocess
+
 import phonenumbers
+from validate_docbr import CPF
 
 # formatar strings (nome, setor, cargo e cidade)
 def campo_formatado(campo):
@@ -38,21 +39,21 @@ def cpf():
 
 # função para formatar espaçamentos ou caracteres do IMEI, Número de Telefone ou outros... 
 def aplicar_mascara(valor, mascara):
-    try:
-        resultado = ""
-        indice = 0
+    quantidade_digitos = mascara.count("#")
+    if len(valor) != quantidade_digitos:
+        raise ValueError("O valor não corresponde ao tamanho da máscara.")
 
-        for char in mascara:
-            if char == "#":
-                resultado += valor[indice]
-                indice += 1
-            else:
-                resultado += char
+    resultado = ""
+    indice = 0
 
-        return resultado
+    for char in mascara:
+        if char == "#":
+            resultado += valor[indice]
+            indice += 1
+        else:
+            resultado += char
 
-    except IndexError:
-        print("Erro")
+    return resultado
 
 # regra para pegar mês atual 
 def mes():
@@ -74,25 +75,23 @@ def modelo():
 def imei():
     while True:
 
-        imei = input("IMEI: ")
+        texto_imei = input("IMEI: ").replace(" ", "")
 
-        if 15 < len(imei) or  len(imei) < 15:
-            print("IMEI inválido")
-            continue
-
-
-        if imei.strip() == "":                              # verifica se mesmo após remover os espaços no início e do fim, a variavel continua vazia
+        if texto_imei.strip() == "":                              # verifica se mesmo após remover os espaços no início e do fim, a variavel continua vazia
             print("Este campo não pode ser vazio!")     
             continue
 
-        if not imei.replace(" ", "").isdigit():
+        if not texto_imei.isdigit():
             print("Digite apenas números!")
             continue
 
-        imei = " ".join(imei.split()).strip()
-        imei = aplicar_mascara(imei, "######/##/######/#")
+        if 15 < len(texto_imei) or  len(texto_imei) < 15:
+            print("IMEI inválido")
+            continue
 
-        return imei
+        imei_limpo = aplicar_mascara(texto_imei, "######/##/######/#")
+
+        return imei_limpo
 
 def numero():
     while True:
@@ -130,21 +129,27 @@ def numero():
 
 def valores():
     while True:
+        texto_valor = input("Valor: ").strip()
+
+        if not texto_valor:
+            print("Esse campo não pode ser vazio!")
+            continue
+
         try:
-            valor = float(input("Valor: "))
-            valor = str(valor)
-
-            if valor.strip() == "":
-                print("Esse campo não pode ser vazio!")
-                continue
-
-            valor = float(valor)
-            valor_parcela = valor / 8
-
-            return {
-            "valor": f"{valor:_.2f}".replace(".", ",").replace("_", "."),
-            "valor_parcela": f"{valor_parcela:_.2f}".replace(".", ",").replace("_", ".")
-            }
-        
-        except ValueError:
+            valor = Decimal(
+                texto_valor.replace(".", "").replace(",", ".")
+            )
+        except InvalidOperation:
             print("Digite apenas números!")
+            continue
+
+        if not valor.is_finite() or valor <= 0:
+            print("O valor deve ser maior que zero.")
+            continue
+
+        valor_parcela = valor / Decimal("8")
+
+        return {
+            "valor": f"{valor:,.2f}".replace(",", "X").replace(".", ",").replace("X", "."),
+            "valor_parcela": f"{valor_parcela:,.2f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        }

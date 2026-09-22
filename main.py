@@ -1,67 +1,82 @@
-from docxtpl import DocxTemplate
 from datetime import datetime
-from functions import campo_formatado, mes, cpf, modelo, imei, numero, valores
-
-# from functions import formatar_string, coletar_dados
-from docx2pdf import convert
-from tkinter import filedialog, Tk
 from pathlib import Path
-from time import sleep
 
-from dotenv import load_dotenv
-import os
+from tkinter import Tk, filedialog
 
-load_dotenv()
-api_key = os.getenv("API_AUTENTIQUE")
+from docx2pdf import convert
+from docxtpl import DocxTemplate
 
-doc = DocxTemplate("modelo.docx")  # Abrindo Modelo Word
-
-nome_funcionario = campo_formatado("Nome: ")    # pegando nome para definir o nome do documento
-numero_telefone = numero()
-
-# dicionario dos campos que serão alterados
-referencias = {
-    "nome" : nome_funcionario,
-    "cpf" : cpf(),
-    "setor" : campo_formatado("Setor: "),
-    "cidade" : campo_formatado("Cidade: "),
-    "modelo" : modelo(),
-    "imei" : imei(),
-    "numero" : numero_telefone,
-    "cargo" : campo_formatado("Cargo: "),
-    "dia" : datetime.now().day,
-    "mes" : mes(),
-    "ano" : datetime.now().year
-}
-
-# passando valo do celular e da parcela
-valores = valores()
-informacoes = referencias | valores 
+from functions import campo_formatado, cpf, imei, mes, modelo, numero, valores
 
 
-doc.render(informacoes)     # renderizando os campos para o documento
+BASE_DIR = Path(__file__).resolve().parent
+MODELO_PATH = BASE_DIR / "modelo.docx"
+PASTA_WORD = BASE_DIR / "termos_word"
 
 
-# salvando docx word na pasta "termos_word"
-pasta_word = Path("termos_word")
-pasta_word.mkdir(exist_ok=True)
+def coletar_informacoes():
+    nome_funcionario = campo_formatado("Nome: ")
 
-nome_arquivo = (f"TERMO_{nome_funcionario}.docx")
-caminho_docx = pasta_word / nome_arquivo
-doc.save(str(caminho_docx))
+    referencias = {
+        "nome": nome_funcionario,
+        "cpf": cpf(),
+        "setor": campo_formatado("Setor: "),
+        "cidade": campo_formatado("Cidade: "),
+        "modelo": modelo(),
+        "imei": imei(),
+        "numero": numero(),
+        "cargo": campo_formatado("Cargo: "),
+        "dia": datetime.now().day,
+        "mes": mes(),
+        "ano": datetime.now().year,
+    }
 
-# convertento para PDF
-# Escolhendo destino
-root = Tk()
-root.withdraw()
-pasta_pdf = filedialog.askdirectory(title="Escolha o destino do PDF")
+    return referencias | valores()
 
-if pasta_pdf:  # usuário pode cancelar a escolha, então vale checar
-    caminho_pdf = Path(pasta_pdf) / caminho_docx.with_suffix(".pdf").name
 
+def gerar_documento(informacoes):
+    documento = DocxTemplate(MODELO_PATH)
+    documento.render(informacoes)
+
+    PASTA_WORD.mkdir(exist_ok=True)
+    nome_arquivo = f"TERMO_{informacoes['nome']}.docx"
+    caminho_docx = PASTA_WORD / nome_arquivo
+    documento.save(caminho_docx)
+
+    return caminho_docx
+
+
+def escolher_pasta_pdf():
+    root = Tk()
+    root.withdraw()
+    pasta_pdf = filedialog.askdirectory(title="Escolha o destino do PDF")
+    root.destroy()
+    return Path(pasta_pdf) if pasta_pdf else None
+
+
+def converter_para_pdf(caminho_docx, pasta_pdf):
+    caminho_pdf = pasta_pdf / caminho_docx.with_suffix(".pdf").name
     print("Convertendo para PDF...")
     convert(str(caminho_docx), str(caminho_pdf))
-    sleep(2)
+
+    if not caminho_pdf.exists():
+        raise FileNotFoundError("A conversão terminou sem criar o arquivo PDF.")
+
+    return caminho_pdf
+
+
+def main():
+    informacoes = coletar_informacoes()
+    caminho_docx = gerar_documento(informacoes)
+    pasta_pdf = escolher_pasta_pdf()
+
+    if pasta_pdf is None:
+        print("Conversão cancelada: nenhuma pasta selecionada.")
+        return
+
+    caminho_pdf = converter_para_pdf(caminho_docx, pasta_pdf)
     print(f"PDF salvo em {caminho_pdf}")
-else:
-    print("Conversão cancelada: nenhuma pasta selecionada.")
+
+
+if __name__ == "__main__":
+    main()
