@@ -8,21 +8,21 @@ from validate_docbr import CPF
 def campo_formatado(campo):
     while True:
 
-        campo = input(campo)
-        if campo.strip() == "":                              # verifica se mesmo após remover os espaços no início e do fim, a variavel continua vazia
+        texto_campo = input(campo)
+        if texto_campo.strip() == "":                              # verifica se mesmo após remover os espaços no início e do fim, a variavel continua vazia
             print("Este campo não pode ser vazio!")     
             continue
 
-        if any(char.isdigit() for char in campo):            # verifica se "qualquer" caractere é um dígito (número) na variavel
+        if any(char.isdigit() for char in texto_campo):            # verifica se "qualquer" caractere é um dígito (número) na variavel
             print("O campo não pode conter números!")
             continue
 
-        if not campo.replace(" ", "").isalpha():             # remove todos os espaços para verificar se o nome possui caracteres especiais
+        if not texto_campo.replace(" ", "").isalpha():             # remove todos os espaços para verificar se o nome possui caracteres especiais
             print("Digite apenas letras!")
             continue
 
-        campo = " ".join(campo.split()).upper().strip()
-        return campo       # remove espaços extras no entre os espaços
+        texto_campo = " ".join(texto_campo.split()).upper().strip()
+        return texto_campo       # remove espaços extras no entre os espaços
 
 # criando documento para verificação
 documento_cpf = CPF()
