@@ -3,3 +3,4 @@
 __pycache__
 calculo_cpf.py
 .gitignore
+termos_word/*.docx
